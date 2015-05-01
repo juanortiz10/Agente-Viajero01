@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public final class Modelo {
+public final class Model {
   StringBuilder sb = new StringBuilder();
   int counter=0;
   int[][] array;
