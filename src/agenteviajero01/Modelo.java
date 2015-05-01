@@ -18,7 +18,7 @@ public final class Modelo {
       BufferedReader br = null;
  
       try {
-         archivo = new File ("/home/juan/Escritorio/ejemplo.txt");
+         archivo = new File ("../ejemplo.txt");
          fr = new FileReader (archivo);
          br = new BufferedReader(fr);
          String linea;
