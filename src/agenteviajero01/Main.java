@@ -6,5 +6,8 @@ public class Main{
         md.readDocument();
         md.generateInformation();
         int firstRoad=md.generateFirstRoad();
+        System.out.println("The first road is "+firstRoad);
+        md.generateNextRoad(firstRoad);
+        System.out.println("The solution is "+md.road);
     }
 }
