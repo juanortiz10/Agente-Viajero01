@@ -1,89 +1,139 @@
 package agenteviajero01;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
 public final class Model {
   StringBuilder sb = new StringBuilder();
   int counter=0;
+  int idxtext = -1;
   int[][] array;
-  ArrayList road= new ArrayList();
+  ArrayList<ArrayList> matrix;
+  ArrayList road = new ArrayList();
   
-  //This method reads the file .txt, then is saved in a String Builder
+  //This method reads the file .txt
   public void readDocument(){
-      File archivo = null;
-      FileReader fr = null;
-      BufferedReader br = null;
- 
-      try {
-         archivo = new File ("../ejemplo.txt");
-         fr = new FileReader (archivo);
-         br = new BufferedReader(fr);
-         String linea;
-      
-         while((linea=br.readLine())!=null){
-            sb.append(linea+" ");
-            counter++;
-         }
+    BufferedReader br = null;
+    
+    try {
+     
+     String linea;
+     
+     br = new BufferedReader(new FileReader("gr17.tsp"));
+     
+     while ((linea= br.readLine()) != null) {
+      if (linea.compareTo("EDGE_WEIGHT_SECTION")==0){
+        idxtext = counter+1;
       }
-      catch(Exception e){
-      }finally{
-         try{                    
-            if( null != fr ){   
-               fr.close();     
-            }                  
-         }catch (Exception e2){}
+      if (linea.compareTo("EOF")==0){
+        break;
       }
-  }
-  //This method saves the file's information in a matrix
-  public void generateInformation(){
-      int j=0,k=0;
-      array= new int[counter][counter];
-      String[] lines = sb.toString().split("\\s");
-        for(int i=0; i<lines.length; i++){
-            if((i+1)%6==0){
-               array[j][k]=Integer.parseInt(lines[i]);
-               j++;  
-               k=0;
-            }else{
-              array[j][k]=Integer.parseInt(lines[i]);
-              k++;
-            }
-        }
+      sb.append(linea+"\n");
+      counter++;
     }
-  
-  //This method chooses the first road which is going to start the heuristic
-  public int generateFirstRoad(){
-      return (0 + (int)(Math.random()*counter)); 
+    
+  } catch (Exception e) {
+   e.printStackTrace();
+ } finally {
+   try {
+    if (br != null)br.close();
+  } catch (Exception ex) {
+    ex.printStackTrace();
   }
+  String[] values = sb.toString().split("\n");
+  
+  ArrayList<String> list = new ArrayList<>();
+  
+  for (int i = idxtext; i < values.length; i++) {
+    list.add(values[i]);
+  }
+  
+  matrix = new ArrayList<>();
+  
+  ArrayList<Integer> toinsert= new ArrayList<>();
+  
+  for (String string : list) {
+    String[] temp=string.split("\\s+");
+    
+    for (String inner : temp) {
+      if(inner.isEmpty())
+        continue;
+      Integer number = Integer.parseInt(inner);
+      if(number==0){
+        
+        toinsert.add(number);
+        matrix.add(toinsert);
+        toinsert = new ArrayList<>();
+      }else{
+        toinsert.add(number);
+      }
+    }
+  }
+  
+  for (int i = 0; i < matrix.size(); i++) {
+    for (int j = 0; j < matrix.size(); j++) {
+      if (j>=i){
+        Integer number = (Integer)matrix.get(j).get(i);
+        if(number!=0)
+          matrix.get(i).add(number);
+      }
+    }
+  }
+  
+  
+}
+}
+  //This method saves the file's information in a matrix
+public void generateArray(){
+  array= new int[matrix.size()][matrix.size()];
+  for(int i =0; i < matrix.size(); i++){
+    for(int j =0; j <matrix.size(); j++){
+      array[i][j]= (Integer)matrix.get(i).get(j);
+    }
+  }
+      /*for(int i = 0; i < array.length; i++)
+        {
+      for(int j = 0; j <array.length; j++)
+      {
+         System.out.printf("%5d ", array[i][j]);
+        }
+      System.out.println();
+         }
+              */
+       }
+       
+       
+  //This method chooses the first road which is going to start the heuristic
+       public int generateFirstRoad(){
+        return (0 + (int)(Math.random()*counter)); 
+      }
 
   //This method is going to search the best next route 
-  public void searchRoad(int number){
-   int min=1000,value,stop=0;
-   for(int i=0; i<array.length;i++){
-       value=array[number][i];
-       if(value<min && value!=0){
+      public void searchRoad(int number){
+       int min=1000,value,stop=0;
+       for(int i=0; i<array.length;i++){
+         value=array[number][i];
+         if(value<min && value!=0){
           min=value;
           stop=i;
-       }
-   }
+        }
+      }
       road.add(stop);
       for(int j=0; j<array.length; j++){
-          for(int k=0;k<array.length; k++){
-               if(k==stop)
-                   array[j][k]=0;
-          }
-      }
-  }
+        for(int k=0;k<array.length; k++){
+         if(k==stop)
+           array[j][k]=0;
+       }
+     }
+   }
 //This Method calls searchRoad method to asks about next roads until it has found all of them
-  public void generateNextRoad(int firstRoad){
-      road.add(firstRoad);
-      for(int i=0; i<counter;i++){
+   public void generateNextRoad(int firstRoad){
+    road.add(firstRoad);
+    for(int i=0; i<counter;i++){
       searchRoad(firstRoad);
-      }
-      road.remove(counter);
-      road.add(firstRoad);
+    }
+    road.remove(counter);
+    road.add(firstRoad);
   }
 }
