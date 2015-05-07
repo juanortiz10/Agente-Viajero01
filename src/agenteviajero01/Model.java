@@ -16,10 +16,8 @@ public final class Model {
   public void readDocument(){
     BufferedReader br = null;
     
-    try {
-     
+    try {     
      String linea;
-     
      br = new BufferedReader(new FileReader("gr17.tsp"));
      
      while ((linea= br.readLine()) != null) {
@@ -106,7 +104,8 @@ public void generateArray(){
        
   //This method chooses the first road which is going to start the heuristic
        public int generateFirstRoad(){
-        return (0 + (int)(Math.random()*counter)); 
+           int v=counter-3;
+        return (0 + (int)(Math.random()*v)); 
       }
 
   //This method is going to search the best next route 
@@ -133,7 +132,11 @@ public void generateArray(){
     for(int i=0; i<counter;i++){
       searchRoad(firstRoad);
     }
-    road.remove(counter);
+    road.remove(counter-1);
+    road.remove(counter-1);
+    road.remove(counter-2);
+    road.remove(counter-3);
     road.add(firstRoad);
   }
 }
+
