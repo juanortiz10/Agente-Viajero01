@@ -9,5 +9,6 @@ public class Main{
         System.out.println("The first road is "+firstRoad);
         md.generateNextRoad(firstRoad);
         System.out.println("The solution is "+md.road);
+        System.out.println("The counter of the tour is "+md.sizeTour);
     }
 }
