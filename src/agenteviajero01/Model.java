@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public final class Model {
   StringBuilder sb = new StringBuilder();
-  int counter=0;
+  int counter=0,sizeTour;
   int idxtext = -1;
   int[][] array;
   ArrayList<ArrayList> matrix;
@@ -121,8 +121,10 @@ public void generateArray(){
       road.add(stop);
       for(int j=0; j<array.length; j++){
         for(int k=0;k<array.length; k++){
-         if(k==stop)
+         if(k==stop){
+           sizeTour+=array[j][k];
            array[j][k]=0;
+         }
        }
      }
    }
@@ -139,4 +141,5 @@ public void generateArray(){
     road.add(firstRoad);
   }
 }
+
 
